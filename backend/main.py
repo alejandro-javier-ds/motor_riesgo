@@ -3,16 +3,19 @@ import json
 import logging
 import re
 import sys
-import pyodbc
 from difflib import get_close_matches
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import polars as pl
 import shap
+import psycopg2
 from catboost import CatBoostClassifier
 from pathlib import Path
 import uvicorn
+from dotenv import load_dotenv
+
+load_dotenv()
 
 LIKERT_PREFIX_PATTERN = re.compile(
     r"^Indica qué tan identificado te sientes con las siguientes afirmaciones cotidianas\.\s*\[(.+)\]\s*$"
@@ -51,11 +54,7 @@ logger.info(f"Model loaded. Expected features: {len(model.feature_names_)}")
 
 explainer = shap.TreeExplainer(model)
 
-conn_str = os.getenv(
-    "DB_CONNECTION_STRING",
-    "DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\\MSSQLLocalDB;DATABASE=DB_MotorRiesgoConductual;Trusted_Connection=yes;"
-)
-
+conn_str = os.getenv("DB_CONNECTION_STRING", "")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "senati2026")
 
 
@@ -117,14 +116,18 @@ def calcular_shap_individual(X_pandas):
     }
 
 
+def get_connection():
+    return psycopg2.connect(conn_str)
+
+
 def persistir_datos(user_data, eval_data, pred_data):
-    conn = pyodbc.connect(conn_str)
+    conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(
         """
         INSERT INTO tbl_usuarios (nombre_completo, edad, distrito_residencia, nivel_educativo, situacion_laboral)
-        OUTPUT INSERTED.usuario_id
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s)
+        RETURNING usuario_id
         """,
         (
             user_data.get("nombre", ""),
@@ -138,8 +141,8 @@ def persistir_datos(user_data, eval_data, pred_data):
     cursor.execute(
         """
         INSERT INTO tbl_evaluacion_conductual (usuario_id, datos_json)
-        OUTPUT INSERTED.evaluacion_id
-        VALUES (?, ?)
+        VALUES (%s, %s)
+        RETURNING evaluacion_id
         """,
         (user_id, json.dumps(eval_data)),
     )
@@ -147,7 +150,7 @@ def persistir_datos(user_data, eval_data, pred_data):
     cursor.execute(
         """
         INSERT INTO tbl_predicciones (evaluacion_id, probabilidad_viabilidad, estado_final, shap_explicacion, monto_aprobado)
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s)
         """,
         (
             eval_id,
@@ -158,6 +161,7 @@ def persistir_datos(user_data, eval_data, pred_data):
         ),
     )
     conn.commit()
+    cursor.close()
     conn.close()
 
 
@@ -219,10 +223,10 @@ async def admin_resultados(x_admin_password: str = Header(None)):
         raise HTTPException(status_code=401, detail="Contraseña incorrecta")
 
     try:
-        conn = pyodbc.connect(conn_str)
+        conn = get_connection()
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT TOP 50
+            SELECT
                 u.nombre_completo,
                 u.edad,
                 u.distrito_residencia,
@@ -237,6 +241,7 @@ async def admin_resultados(x_admin_password: str = Header(None)):
             INNER JOIN tbl_evaluacion_conductual e ON u.usuario_id = e.usuario_id
             INNER JOIN tbl_predicciones p ON e.evaluacion_id = p.evaluacion_id
             ORDER BY u.fecha_registro DESC
+            LIMIT 50
         """)
         columns = [col[0] for col in cursor.description]
         resultados = []
@@ -262,6 +267,7 @@ async def admin_resultados(x_admin_password: str = Header(None)):
                 registro["shap_explicacion"] = None
             resultados.append(registro)
 
+        cursor.close()
         conn.close()
         return {"total": len(resultados), "resultados": resultados}
 
