@@ -27,41 +27,27 @@ El modelo alcanza un **AUC-ROC de 0.8404** con un gap train-test de +0.018, demo
 | Contenedor | Docker |
 
 ## Estructura del Proyecto
+
+```
 motor_riesgo/
-
 ├── backend/
-
-│   ├── simulador.py          # Generador de datos sintéticos (5000 registros)
-
-│   ├── model.py              # Entrenamiento Iter 4 Hardened
-
-│   ├── main.py               # API FastAPI (/predict + /admin/resultados)
-
-│   ├── audit.py              # Validación del modelo serializado
-
-│   ├── inference.py          # Inferencia sintética + sensibilidad
-
-│   ├── inference_real_data.py # Inferencia sobre 28 respondedores reales
-
-│   ├── mlflow_tracking.py    # Registro de 4 iteraciones en MLflow
-
-│   ├── Dockerfile            # Imagen Docker para Render
-
-│   ├── pyproject.toml        # Dependencias Poetry
-
-│   └── requirements.txt      # Dependencias exportadas para Docker
-
+│   ├── simulador.py           → Generador de datos sintéticos (5000 registros)
+│   ├── model.py               → Entrenamiento Iter 4 Hardened
+│   ├── main.py                → API FastAPI (/predict + /admin/resultados)
+│   ├── audit.py               → Validación del modelo serializado
+│   ├── inference.py           → Inferencia sintética + sensibilidad
+│   ├── inference_real_data.py → Inferencia sobre 28 respondedores reales
+│   ├── mlflow_tracking.py     → Registro de 4 iteraciones en MLflow
+│   ├── Dockerfile             → Imagen Docker para Render
+│   ├── pyproject.toml         → Dependencias Poetry
+│   └── requirements.txt       → Dependencias exportadas para Docker
 ├── frontend/
-
-│   ├── app/                  # Páginas Next.js (13 pantallas)
-
-│   ├── components/           # Componentes reutilizables
-
-│   └── lib/api.ts            # Cliente API
-
-├── dvc.yaml                  # Pipeline DVC
-
-└── dvc.lock                  # Hashes de artefactos versionados
+│   ├── app/                   → Páginas Next.js (13 pantallas)
+│   ├── components/            → Componentes reutilizables
+│   └── lib/api.ts             → Cliente API
+├── dvc.yaml                   → Pipeline DVC
+└── dvc.lock                   → Hashes de artefactos versionados
+```
 
 ## Iteraciones del Modelo
 
