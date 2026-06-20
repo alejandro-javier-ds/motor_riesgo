@@ -1,0 +1,72 @@
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.pytest_cache/
+
+node_modules/
+.next/
+out/
+build/
+dist/
+
+.env
+.env.local
+.env.production
+.env.development
+*.local
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+.DS_Store
+Thumbs.db
+
+backend/catboost_info/
+*.log
+
+mlruns/
+mlflow.db
+
+.dvc/cache/
+.dvc/tmp/
+.dvc/plots/
+
+catboost_thin_file_BACKUP.cbm
+
+requirements_actual.txt
+
+# MLflow
+mlruns/
+mlflow.db
+backend/mlruns/
+
+# CatBoost logs
+catboost_info/
+backend/catboost_info/
+
+# Modelos CatBoost
+*.cbm
+catboost_thin_file_BACKUP*.cbm
+
+# DVC ya maneja el modelo principal
+# Los backups son locales, no van a Git
+
+# Datos reales (privacidad de respondedores)
+backend/raw_data.csv
+
+# Dataset simulado (versionado por DVC, no por Git)
+backend/simulated_thin_file_data.csv
+
+# Script SQL local de desarrollo
+DB_MotorRiesgoConductual.sql
+
+# Backup modelo v2 local
+catboost_thin_file_BACKUP_v2.cbm

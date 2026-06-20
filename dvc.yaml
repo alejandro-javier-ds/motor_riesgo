@@ -1,0 +1,18 @@
+stages:
+  simular:
+    cmd: python backend/simulador.py
+    deps:
+      - backend/simulador.py
+    outs:
+      - backend/simulated_thin_file_data.csv
+
+  entrenar:
+    cmd: python backend/model.py
+    deps:
+      - backend/model.py
+      - backend/simulated_thin_file_data.csv
+    outs:
+      - backend/catboost_thin_file.cbm
+    metrics:
+      - backend/metrics.json:
+          cache: false

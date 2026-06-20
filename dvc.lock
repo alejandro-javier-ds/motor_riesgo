@@ -1,0 +1,34 @@
+schema: '2.0'
+stages:
+  simular:
+    cmd: python backend/simulador.py
+    deps:
+    - path: backend/simulador.py
+      hash: md5
+      md5: e894171196e1ba19f8510540ffbfd03d
+      size: 18927
+    outs:
+    - path: backend/simulated_thin_file_data.csv
+      hash: md5
+      md5: 6ac4639d6e5d58820995df4f185b26f9
+      size: 2892409
+  entrenar:
+    cmd: python backend/model.py
+    deps:
+    - path: backend/model.py
+      hash: md5
+      md5: 48ef36f53fce325a0ad41bb7f1dfd173
+      size: 9242
+    - path: backend/simulated_thin_file_data.csv
+      hash: md5
+      md5: 6ac4639d6e5d58820995df4f185b26f9
+      size: 2892409
+    outs:
+    - path: backend/catboost_thin_file.cbm
+      hash: md5
+      md5: f0973d14edecd469fae7e35e397b4a0b
+      size: 676768
+    - path: backend/metrics.json
+      hash: md5
+      md5: 014e37c7eb3f6dd4b985b7a222fcf64c
+      size: 321

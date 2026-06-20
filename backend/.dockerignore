@@ -1,0 +1,17 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+.env
+.env.local
+catboost_info/
+*.png
+README.md
+.vscode/
+.idea/
+mlruns/
+mlflow.db
+catboost_info/
+mlflow_tracking.py
