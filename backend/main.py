@@ -52,7 +52,7 @@ model = CatBoostClassifier()
 model.load_model(str(base_dir / "catboost_thin_file.cbm"))
 logger.info(f"Model loaded. Expected features: {len(model.feature_names_)}")
 
-explainer = shap.TreeExplainer(model)
+explainer = None
 
 conn_str = os.getenv("DB_CONNECTION_STRING", "")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "senati2026")
@@ -91,6 +91,10 @@ def asignar_politica(prob: float):
 
 
 def calcular_shap_individual(X_pandas):
+    global explainer
+    if explainer is None:
+        logger.info("Initializing SHAP explainer...")
+        explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(X_pandas)
     feature_names = list(X_pandas.columns)
     valores = shap_values[0].tolist()
@@ -274,6 +278,11 @@ async def admin_resultados(x_admin_password: str = Header(None)):
     except Exception as e:
         logger.info(f"ERROR in /admin/resultados: {str(e)[:300]}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
 
 if __name__ == "__main__":
