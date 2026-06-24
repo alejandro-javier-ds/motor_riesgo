@@ -30,8 +30,8 @@ LIKERT_PREFIX_PATTERN: Final[re.Pattern] = re.compile(
     r"^Indica qué tan identificado te sientes con las siguientes afirmaciones cotidianas\.\s*\[(.+)\]\s*$"
 )
 FUZZY_MATCH_CUTOFF: Final[float] = 0.85
-THRESHOLD_S800: Final[float] = 0.35
-THRESHOLD_S300: Final[float] = 0.55
+THRESHOLD_S800: Final[float] = 0.30
+THRESHOLD_S300: Final[float] = 0.35
 
 MOROSIDAD_OPCIONES: Final[dict[str, str]] = {
     "imputed": "No, siempre he pagado todas mis obligaciones a tiempo",

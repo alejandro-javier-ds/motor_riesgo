@@ -32,6 +32,8 @@ Thumbs.db
 backend/catboost_info/
 *.log
 
+main_local.py
+
 mlruns/
 mlflow.db
 

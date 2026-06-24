@@ -191,7 +191,7 @@ def calcular_target(perfil_tipo, subtipo, scores, respuesta_morosidad, rng_local
     score_buenos = np.mean([score_orden_promedio, score_descuento, score_locus])
     score_mentira = scores["deseabilidad_social"]
 
-    logit = 4.47 - 1.5 * score_buenos + 0.3 * score_mentira
+    logit = 2.4 - 1.5 * score_buenos + 0.3 * score_mentira
 
     if respuesta_morosidad == MOROSIDAD_OPCIONES[0]:
         logit += 0.8

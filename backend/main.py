@@ -82,9 +82,9 @@ def normalize_survey_keys(raw_data: dict, model_features: list) -> dict:
 
 
 def asignar_politica(prob: float):
-    if prob < 0.75:
+    if prob < 0.30:
         return "Pre-aprobado", 800.0
-    elif prob < 0.88:
+    elif prob < 0.35:
         return "Pre-aprobado", 300.0
     else:
         return "Denegado", 0.0

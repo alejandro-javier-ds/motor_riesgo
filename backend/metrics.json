@@ -1,11 +1,11 @@
 {
-  "trees_used": 784,
-  "auc_train": 0.8583099500439481,
-  "auc_validation": 0.8199426456687867,
-  "auc_test": 0.8403971547125074,
-  "train_test_gap": 0.017912795331440634,
-  "accuracy": 0.759,
-  "precision_riesgo": 0.8070953436807096,
-  "recall_riesgo": 0.7027027027027027,
-  "f1_riesgo": 0.7512899896800825
+  "trees_used": 2772,
+  "auc_train": 0.88443706075745,
+  "auc_validation": 0.8639725346124847,
+  "auc_test": 0.8615253333333334,
+  "train_test_gap": 0.022911727424116624,
+  "accuracy": 0.8,
+  "precision_riesgo": 0.5796178343949044,
+  "recall_riesgo": 0.728,
+  "f1_riesgo": 0.6453900709219859
 }
